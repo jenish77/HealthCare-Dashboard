@@ -1,0 +1,38 @@
+# Security & Environment Secrets (NEVER PUSH SECRETS TO GIT)
+.env
+.env.production
+.env.local
+.env.development
+.env.test
+*.env
+!.env.example
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+server/node_modules/
+client/node_modules/
+
+# Next.js Build Output
+client/.next/
+client/out/
+
+# TypeScript Build Output
+server/dist/
+
+# Utility/Temporary Scripts
+server/src/utils/testLoginCheck.ts
+server/src/utils/repairCloudUsers.ts
+server/src/utils/migrateToCloud.ts
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
