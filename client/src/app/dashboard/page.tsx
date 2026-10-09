@@ -10,6 +10,7 @@ import { CommonDiagnosesChart } from '../../components/charts/CommonDiagnosesCha
 import { SeasonalPatternsChart } from '../../components/charts/SeasonalPatternsChart';
 import { AgeGroupChart } from '../../components/charts/AgeGroupChart';
 import { EncounterFormModal } from '../../components/EncounterFormModal';
+import { SkeletonDashboard } from '../../components/ui/Skeleton';
 import { Activity, Users, Calendar, TrendingUp, Plus, RefreshCw, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -138,100 +139,105 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* KPI Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-              <Activity className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase">Total Encounters</p>
-              <p className="text-2xl font-black text-slate-900">{dashboardData?.kpis.totalEncounters ?? 0}</p>
-            </div>
-          </div>
+        {loading ? (
+          <SkeletonDashboard />
+        ) : (
+          <>
+            {/* KPI Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                  <Activity className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">Total Encounters</p>
+                  <p className="text-2xl font-black text-slate-900">{dashboardData?.kpis.totalEncounters ?? 0}</p>
+                </div>
+              </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
-              <TrendingUp className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase">Top Diagnosis Category</p>
-              <p className="text-lg font-black text-slate-900">{dashboardData?.kpis.topCategory ?? 'N/A'}</p>
-            </div>
-          </div>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">Top Diagnosis Category</p>
+                  <p className="text-lg font-black text-slate-900">{dashboardData?.kpis.topCategory ?? 'N/A'}</p>
+                </div>
+              </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
-            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-              <Users className="w-6 h-6" />
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+                  <Users className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase">Unique Patients Seen</p>
+                  <p className="text-2xl font-black text-slate-900">{dashboardData?.kpis.uniquePatients ?? 0}</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-500 uppercase">Unique Patients Seen</p>
-              <p className="text-2xl font-black text-slate-900">{dashboardData?.kpis.uniquePatients ?? 0}</p>
-            </div>
-          </div>
-        </div>
 
-        {/* 4 Core Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Chart A */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-100 text-red-700">
-                Highest Priority
-              </span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">A. Illness Trends Over Time</h2>
-              <p className="text-xs text-slate-500">
-                Is a medical condition becoming more frequent over time?
-              </p>
-            </div>
-            <IllnessTrendsChart data={dashboardData?.illnessTrends || []} />
-          </div>
+            {/* 4 Core Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Chart A */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-100 text-red-700">
+                    Highest Priority
+                  </span>
+                  <h2 className="text-base font-bold text-slate-900 mt-1">A. Illness Trends Over Time</h2>
+                  <p className="text-xs text-slate-500">
+                    Is a medical condition becoming more frequent over time?
+                  </p>
+                </div>
+                <IllnessTrendsChart data={dashboardData?.illnessTrends || []} />
+              </div>
 
-          {/* Chart B */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-700">
-                Frequency Ranking
-              </span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">B. Most Common Diagnoses</h2>
-              <p className="text-xs text-slate-500">
-                Which health conditions account for the majority of clinic visits?
-              </p>
-            </div>
-            <CommonDiagnosesChart data={dashboardData?.commonDiagnoses || []} />
-          </div>
+              {/* Chart B */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-700">
+                    Frequency Ranking
+                  </span>
+                  <h2 className="text-base font-bold text-slate-900 mt-1">B. Most Common Diagnoses</h2>
+                  <p className="text-xs text-slate-500">
+                    Which health conditions account for the majority of clinic visits?
+                  </p>
+                </div>
+                <CommonDiagnosesChart data={dashboardData?.commonDiagnoses || []} />
+              </div>
 
-          {/* Chart C */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-700">
-                Seasonal Patterns
-              </span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">C. Seasonal Illness Patterns</h2>
-              <p className="text-xs text-slate-500">
-                Which illnesses show recurring monthly or seasonal surges?
-              </p>
-            </div>
-            <SeasonalPatternsChart data={dashboardData?.seasonalPatterns || []} />
-          </div>
+              {/* Chart C */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                    Seasonal Patterns
+                  </span>
+                  <h2 className="text-base font-bold text-slate-900 mt-1">C. Seasonal Illness Patterns</h2>
+                  <p className="text-xs text-slate-500">
+                    Which illnesses show recurring monthly or seasonal surges?
+                  </p>
+                </div>
+                <SeasonalPatternsChart data={dashboardData?.seasonalPatterns || []} />
+              </div>
 
-          {/* Chart D */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-100 text-cyan-700">
-                Demographics
-              </span>
-              <h2 className="text-base font-bold text-slate-900 mt-1">D. Encounters by Age Group</h2>
-              <p className="text-xs text-slate-500">
-                Which age brackets (0–12, 13–18, 19–35, 36–60, 60+) account for the most visits?
-              </p>
+              {/* Chart D */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-cyan-100 text-cyan-700">
+                    Demographics
+                  </span>
+                  <h2 className="text-base font-bold text-slate-900 mt-1">D. Encounters by Age Group</h2>
+                  <p className="text-xs text-slate-500">
+                    Which age brackets (0–12, 13–18, 19–35, 36–60, 60+) account for the most visits?
+                  </p>
+                </div>
+                <AgeGroupChart data={dashboardData?.ageGroupDistribution || []} />
+              </div>
             </div>
-            <AgeGroupChart data={dashboardData?.ageGroupDistribution || []} />
-          </div>
-        </div>
+          </>
+        )}
       </div>
 
-      {/* Real-time Patient Visit Modal */}
       <EncounterFormModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

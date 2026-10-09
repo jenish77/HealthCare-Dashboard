@@ -5,7 +5,8 @@ import { useAuth } from '../../../context/AuthContext';
 import { Sidebar } from '../../../components/Sidebar';
 import { api } from '../../../lib/api';
 import { User } from '../../../types';
-import { UserCheck, UserPlus, ShieldAlert, CheckCircle2, XCircle, Eye, EyeOff } from 'lucide-react';
+import { SkeletonTable } from '../../../components/ui/Skeleton';
+import { UserPlus, CheckCircle2, XCircle, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function AdminUsersPage() {
@@ -16,7 +17,6 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // New Clinician Form State
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -215,11 +215,7 @@ export default function AdminUsersPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {loading ? (
-                    <tr>
-                      <td colSpan={4} className="p-6 text-center text-slate-400">
-                        Loading user directory...
-                      </td>
-                    </tr>
+                    <SkeletonTable rows={4} cols={4} />
                   ) : (
                     usersList.map((u) => (
                       <tr key={u._id} className="hover:bg-slate-50">

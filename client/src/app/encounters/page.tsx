@@ -6,6 +6,7 @@ import { Sidebar } from '../../components/Sidebar';
 import { api } from '../../lib/api';
 import { Encounter, Patient } from '../../types';
 import { EncounterFormModal } from '../../components/EncounterFormModal';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import {
   Stethoscope,
   Search,
@@ -15,7 +16,6 @@ import {
   AlertCircle,
   Filter,
   Calendar,
-  User,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -174,9 +174,7 @@ export default function EncountersPage() {
         {/* Encounters List Cards */}
         <div className="space-y-4">
           {loading ? (
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">
-              Loading encounters...
-            </div>
+            <SkeletonCard count={3} />
           ) : encounters.length === 0 ? (
             <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">
               No encounter records found matching your filters.
@@ -218,7 +216,6 @@ export default function EncountersPage() {
                         {enc.severity} Severity
                       </span>
 
-                      {/* Doctor or Admin Edit Button */}
                       {hasRole(['doctor', 'admin']) && (
                         <button
                           onClick={() => handleEdit(enc)}
@@ -229,7 +226,6 @@ export default function EncountersPage() {
                         </button>
                       )}
 
-                      {/* Admin Delete Button */}
                       {hasRole(['admin']) && (
                         <button
                           onClick={() => handleDelete(enc._id)}

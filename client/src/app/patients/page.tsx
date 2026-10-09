@@ -6,7 +6,8 @@ import { Sidebar } from '../../components/Sidebar';
 import { api } from '../../lib/api';
 import { Patient } from '../../types';
 import { PatientFormModal } from '../../components/PatientFormModal';
-import { Users, Search, UserPlus, ShieldCheck, MapPin } from 'lucide-react';
+import { SkeletonTable } from '../../components/ui/Skeleton';
+import { Users, Search, UserPlus, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function PatientsPage() {
@@ -114,14 +115,10 @@ export default function PatientsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
-                  <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400">
-                      Loading patient records...
-                    </td>
-                  </tr>
+                  <SkeletonTable rows={5} cols={6} />
                 ) : patients.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400">
+                    <td colSpan={6} className="p-8 text-center text-slate-400 font-medium">
                       No patient records found.
                     </td>
                   </tr>

@@ -5,6 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { Sidebar } from '../../../components/Sidebar';
 import { api } from '../../../lib/api';
 import { AuditLog } from '../../../types';
+import { SkeletonTable } from '../../../components/ui/Skeleton';
 import { ShieldAlert, Search, Filter, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -125,11 +126,7 @@ export default function AdminAuditLogsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 font-mono">
                 {loading ? (
-                  <tr>
-                    <td colSpan={6} className="p-8 text-center text-slate-400 font-sans">
-                      Loading security audit logs...
-                    </td>
-                  </tr>
+                  <SkeletonTable rows={5} cols={6} />
                 ) : logs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-slate-400 font-sans">
