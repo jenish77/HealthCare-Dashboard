@@ -3,10 +3,12 @@ import { AuthService } from './auth.service';
 import { ApiResponse } from '../../utils/apiResponse';
 import { logAudit } from '../../middlewares/audit.middleware';
 
+// For cross-origin production deployment (e.g. Vercel frontend + Railway backend),
+// sameSite MUST be 'none' and secure MUST be true for cross-site cookie delivery.
 const getCookieOptions = (maxAgeMs: number) => ({
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
+  secure: true,
+  sameSite: 'none' as const,
   maxAge: maxAgeMs,
 });
 
@@ -26,9 +28,7 @@ export class AuthController {
       const { email, password } = req.body;
       const { user, tokens } = await AuthService.loginUser(email, password);
 
-      // Access Token: 15 mins (15 * 60 * 1000 = 900000 ms)
       res.cookie('accessToken', tokens.accessToken, getCookieOptions(15 * 60 * 1000));
-      // Refresh Token: 7 days (7 * 24 * 60 * 60 * 1000 = 604800000 ms)
       res.cookie('refreshToken', tokens.refreshToken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
 
       req.user = user;
@@ -58,7 +58,7 @@ export class AuthController {
   static async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const incomingRefreshToken =
-        req.cookies?.refreshToken || req.body?.refreshToken;
+        req.cookies?.refreshToken || req.body?.refreshToken || req.headers['x-refresh-token'];
 
       const { tokens, user } = await AuthService.refreshAccessToken(incomingRefreshToken);
 
@@ -93,8 +93,8 @@ export class AuthController {
         await logAudit(req, 'USER_LOGOUT', 'Auth', req.user._id.toString());
       }
 
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
+      res.clearCookie('accessToken', getCookieOptions(0));
+      res.clearCookie('refreshToken', getCookieOptions(0));
 
       res.status(200).json(new ApiResponse(200, null, 'Logged out successfully'));
     } catch (error) {
